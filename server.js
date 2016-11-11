@@ -42,23 +42,24 @@ const oauth2 = new jsforce.OAuth2({
 
 
 app.get('/oauth2/auth', (req, res) => {
-    res.redirect(oauth2.getAuthorizationUrl(302, { scope: 'api id web refresh_token' }));
+    res.redirect( oauth2.getAuthorizationUrl() );
  });
 
 app.get('/oauth2/callback', function(req, res) {
   var conn = new jsforce.Connection({ oauth2 : oauth2 });
-  var code = req.param('code');
-  conn.authorize(code, function(err, userInfo) {
-    if (err) { return console.error(err); }
-    // Now you can get the access token, refresh token, and instance URL information.
-    // Save them to establish connection next time.
-    console.log(conn.accessToken);
-    console.log(conn.refreshToken);
-    console.log(conn.instanceUrl);
-    console.log("User ID: " + userInfo.id);
-    console.log("Org ID: " + userInfo.organizationId);
-    // ...
-  });
+  console.log(Object.keys(req.query))
+  var code = req.query.code;
+   conn.authorize(code, function(err, userInfo) {
+     if (err) { return console.error(err); }
+     // Now you can get the access token, refresh token, and instance URL information.
+     // Save them to establish connection next time.
+     console.log(conn.accessToken);
+     console.log(conn.refreshToken);
+     console.log(conn.instanceUrl);
+     console.log("User ID: " + userInfo.id);
+     console.log("Org ID: " + userInfo.organizationId);
+     // ...
+   });
 });
 
 
